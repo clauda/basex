@@ -1,0 +1,31 @@
+version: '3.5'
+
+services:
+  phoenix:
+    build: 
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - type: bind
+        source: .
+        target: /code
+    ports:
+      - 4000:4000
+    env_file:
+      - docker.dev.env
+    depends_on:
+      - database
+    command:
+      - ./run.dev.sh
+
+  database:
+    image: postgres:11.3-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always
+    volumes:
+      - data:/var/lib/postgresql/data
+      
+volumes:
+  data:
